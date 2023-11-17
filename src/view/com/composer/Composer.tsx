@@ -35,6 +35,7 @@ import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
@@ -59,6 +60,7 @@ import {
 import {useSession, getAgent} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useComposerControls} from '#/state/shell/composer'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -103,6 +105,7 @@ export const ComposePost = observer(function ComposePost({
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [labels, setLabels] = useState<string[]>([])
+  const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(), [])
   const onClose = useCallback(() => {
@@ -216,6 +219,7 @@ export const ComposePost = observer(function ComposePost({
         quote,
         extLink,
         labels,
+        threadgate,
         onStateChange: setProcessingState,
         langs: toPostLanguages(langPrefs.postLanguage),
       })
@@ -430,6 +434,7 @@ export const ComposePost = observer(function ComposePost({
             <>
               <SelectPhotoBtn gallery={gallery} />
               <OpenCameraBtn gallery={gallery} />
+              <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
             </>
           ) : null}
           {isDesktop ? <EmojiPickerButton /> : null}

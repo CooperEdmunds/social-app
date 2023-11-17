@@ -20,6 +20,7 @@ interface TrackPropertiesMap {
   'Composer:PastedPhotos': {}
   'Composer:CameraOpened': {}
   'Composer:GalleryOpened': {}
+  'Composer:ThreadgateOpened': {}
   'HomeScreen:PressCompose': {}
   'ProfileScreen:PressCompose': {}
   // EDIT PROFILE events

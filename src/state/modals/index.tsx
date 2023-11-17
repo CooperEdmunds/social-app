@@ -5,6 +5,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 
 import {ImageModel} from '#/state/models/media/image'
 import {GalleryModel} from '#/state/models/media/gallery'
+import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -109,6 +110,12 @@ export interface SelfLabelModal {
   onChange: (labels: string[]) => void
 }
 
+export interface ThreadgateModal {
+  name: 'threadgate'
+  settings: ThreadgateSetting[]
+  onChange: (settings: ThreadgateSetting[]) => void
+}
+
 export interface ChangeHandleModal {
   name: 'change-handle'
   onChanged: () => void
@@ -194,6 +201,7 @@ export type Modal =
   | ServerInputModal
   | RepostModal
   | SelfLabelModal
+  | ThreadgateModal
 
   // Bluesky access
   | WaitlistModal

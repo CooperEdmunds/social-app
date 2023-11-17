@@ -107,7 +107,7 @@ export function PostCtrls({
       <TouchableOpacity
         testID="replyBtn"
         style={[styles.ctrl, !big && styles.ctrlPad, {paddingLeft: 0}]}
-        onPress={onPressReply}
+        onPress={onPressReply} // TODO apply canReply
         accessibilityRole="button"
         accessibilityLabel={`Reply (${post.replyCount} ${
           post.replyCount === 1 ? 'reply' : 'replies'

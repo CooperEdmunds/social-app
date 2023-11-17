@@ -16,6 +16,7 @@ import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
+import * as ThreadgateModal from './Threadgate'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as AltTextImageModal from './AltImage'
 import * as EditImageModal from './EditImage'
@@ -94,6 +95,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <RepostModal.Component {...modal} />
   } else if (modal.name === 'self-label') {
     element = <SelfLabelModal.Component {...modal} />
+  } else if (modal.name === 'threadgate') {
+    element = <ThreadgateModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
   } else if (modal.name === 'waitlist') {

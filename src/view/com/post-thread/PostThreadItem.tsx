@@ -40,6 +40,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {WhoCanReply} from '../threadgate/WhoCanReply'
 
 export function PostThreadItem({
   post,
@@ -229,6 +230,7 @@ function PostThreadItemLoaded({
             </View>
           </View>
         )}
+        <WhoCanReply post={post} style={[{borderTopWidth: 1}, pal.border]} />
 
         <Link
           testID={`postThreadItem-by-${post.author.handle}`}
@@ -417,151 +419,154 @@ function PostThreadItemLoaded({
   } else {
     const isThreadedChild = treeView && depth > 1
     return (
-      <PostOuterWrapper
-        post={post}
-        depth={depth}
-        showParentReplyLine={!!showParentReplyLine}
-        treeView={treeView}
-        hasPrecedingItem={hasPrecedingItem}>
-        <PostHider
-          testID={`postThreadItem-by-${post.author.handle}`}
-          href={postHref}
-          style={[pal.view]}
-          moderation={moderation.content}>
-          <PostSandboxWarning />
+      <>
+        <WhoCanReply post={post} style={[{borderTopWidth: 1}, pal.border]} />
+        <PostOuterWrapper
+          post={post}
+          depth={depth}
+          showParentReplyLine={!!showParentReplyLine}
+          treeView={treeView}
+          hasPrecedingItem={hasPrecedingItem}>
+          <PostHider
+            testID={`postThreadItem-by-${post.author.handle}`}
+            href={postHref}
+            style={[pal.view]}
+            moderation={moderation.content}>
+            <PostSandboxWarning />
 
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 10,
-              paddingLeft: 8,
-              height: isThreadedChild ? 8 : 16,
-            }}>
-            <View style={{width: 38}}>
-              {!isThreadedChild && showParentReplyLine && (
-                <View
-                  style={[
-                    styles.replyLine,
-                    {
-                      flexGrow: 1,
-                      backgroundColor: pal.colors.border,
-                      marginBottom: 4,
-                    },
-                  ]}
-                />
-              )}
-            </View>
-          </View>
-
-          <View
-            style={[
-              styles.layout,
-              {
-                paddingBottom: showChildReplyLine && !isThreadedChild ? 0 : 8,
-              },
-            ]}>
-            {!isThreadedChild && (
-              <View style={styles.layoutAvi}>
-                <PreviewableUserAvatar
-                  size={38}
-                  did={post.author.did}
-                  handle={post.author.handle}
-                  avatar={post.author.avatar}
-                  moderation={moderation.avatar}
-                />
-
-                {showChildReplyLine && (
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                paddingLeft: 8,
+                height: isThreadedChild ? 8 : 16,
+              }}>
+              <View style={{width: 38}}>
+                {!isThreadedChild && showParentReplyLine && (
                   <View
                     style={[
                       styles.replyLine,
                       {
                         flexGrow: 1,
                         backgroundColor: pal.colors.border,
-                        marginTop: 4,
+                        marginBottom: 4,
                       },
                     ]}
                   />
                 )}
               </View>
-            )}
-
-            <View style={styles.layoutContent}>
-              <PostMeta
-                author={post.author}
-                authorHasWarning={!!post.author.labels?.length}
-                timestamp={post.indexedAt}
-                postHref={postHref}
-                showAvatar={isThreadedChild}
-                avatarSize={26}
-                displayNameType="md-bold"
-                displayNameStyle={isThreadedChild && s.ml2}
-                style={isThreadedChild && s.mb5}
-              />
-              <PostAlerts
-                moderation={moderation.content}
-                style={styles.alert}
-              />
-              {richText?.text ? (
-                <View style={styles.postTextContainer}>
-                  <RichText
-                    type="post-text"
-                    richText={richText}
-                    style={[pal.text, s.flex1]}
-                    lineHeight={1.3}
-                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                  />
-                </View>
-              ) : undefined}
-              {limitLines ? (
-                <TextLink
-                  text="Show More"
-                  style={pal.link}
-                  onPress={onPressShowMore}
-                  href="#"
-                />
-              ) : undefined}
-              {post.embed && (
-                <ContentHider
-                  style={styles.contentHider}
-                  moderation={moderation.embed}>
-                  <PostEmbeds
-                    embed={post.embed}
-                    moderation={moderation.embed}
-                  />
-                </ContentHider>
-              )}
-              <PostCtrls
-                post={post}
-                record={record}
-                onPressReply={onPressReply}
-              />
             </View>
-          </View>
-          {hasMore ? (
-            <Link
+
+            <View
               style={[
-                styles.loadMore,
+                styles.layout,
                 {
-                  paddingLeft: treeView ? 8 : 70,
-                  paddingTop: 0,
-                  paddingBottom: treeView ? 4 : 12,
+                  paddingBottom: showChildReplyLine && !isThreadedChild ? 0 : 8,
                 },
-              ]}
-              href={postHref}
-              title={itemTitle}
-              noFeedback>
-              <Text type="sm-medium" style={pal.textLight}>
-                More
-              </Text>
-              <FontAwesomeIcon
-                icon="angle-right"
-                color={pal.colors.textLight}
-                size={14}
-              />
-            </Link>
-          ) : undefined}
-        </PostHider>
-      </PostOuterWrapper>
+              ]}>
+              {!isThreadedChild && (
+                <View style={styles.layoutAvi}>
+                  <PreviewableUserAvatar
+                    size={38}
+                    did={post.author.did}
+                    handle={post.author.handle}
+                    avatar={post.author.avatar}
+                    moderation={moderation.avatar}
+                  />
+
+                  {showChildReplyLine && (
+                    <View
+                      style={[
+                        styles.replyLine,
+                        {
+                          flexGrow: 1,
+                          backgroundColor: pal.colors.border,
+                          marginTop: 4,
+                        },
+                      ]}
+                    />
+                  )}
+                </View>
+              )}
+
+              <View style={styles.layoutContent}>
+                <PostMeta
+                  author={post.author}
+                  authorHasWarning={!!post.author.labels?.length}
+                  timestamp={post.indexedAt}
+                  postHref={postHref}
+                  showAvatar={isThreadedChild}
+                  avatarSize={26}
+                  displayNameType="md-bold"
+                  displayNameStyle={isThreadedChild && s.ml2}
+                  style={isThreadedChild && s.mb5}
+                />
+                <PostAlerts
+                  moderation={moderation.content}
+                  style={styles.alert}
+                />
+                {richText?.text ? (
+                  <View style={styles.postTextContainer}>
+                    <RichText
+                      type="post-text"
+                      richText={richText}
+                      style={[pal.text, s.flex1]}
+                      lineHeight={1.3}
+                      numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                    />
+                  </View>
+                ) : undefined}
+                {limitLines ? (
+                  <TextLink
+                    text="Show More"
+                    style={pal.link}
+                    onPress={onPressShowMore}
+                    href="#"
+                  />
+                ) : undefined}
+                {post.embed && (
+                  <ContentHider
+                    style={styles.contentHider}
+                    moderation={moderation.embed}>
+                    <PostEmbeds
+                      embed={post.embed}
+                      moderation={moderation.embed}
+                    />
+                  </ContentHider>
+                )}
+                <PostCtrls
+                  post={post}
+                  record={record}
+                  onPressReply={onPressReply}
+                />
+              </View>
+            </View>
+            {hasMore ? (
+              <Link
+                style={[
+                  styles.loadMore,
+                  {
+                    paddingLeft: treeView ? 8 : 70,
+                    paddingTop: 0,
+                    paddingBottom: treeView ? 4 : 12,
+                  },
+                ]}
+                href={postHref}
+                title={itemTitle}
+                noFeedback>
+                <Text type="sm-medium" style={pal.textLight}>
+                  More
+                </Text>
+                <FontAwesomeIcon
+                  icon="angle-right"
+                  color={pal.colors.textLight}
+                  size={14}
+                />
+              </Link>
+            ) : undefined}
+          </PostHider>
+        </PostOuterWrapper>
+      </>
     )
   }
 }
